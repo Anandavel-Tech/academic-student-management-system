@@ -1,6 +1,6 @@
-# Acadimi
+# Academic
 
-Acadimi is a Flask application backed by MongoDB.
+Academic is a Flask application backed by MongoDB.
 
 ## Run on Windows PowerShell
 

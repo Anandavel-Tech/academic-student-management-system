@@ -24,3 +24,14 @@ MongoDB is optional for launching the application. Without a local MongoDB
 server at `mongodb://localhost:27017`, the app starts with temporary mock data.
 For persistent users, courses, students, and marks, start MongoDB before
 starting the Flask app.
+
+# Project Screenshots
+
+## Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+## Student Management
+![Student Management](screenshots/students.png)
+
+## Marks Management
+![Marks Management](screenshots/marks.png)

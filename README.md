@@ -27,11 +27,14 @@ starting the Flask app.
 
 # Project Screenshots
 
-## Dashboard
-![Dashboard](screenshots/dashboard.png)
+## Admin Dashboard
 
-## Student Management
-![Student Management](screenshots/students.png)
+![Admin Dashboard](./backend/Screenshot/Admin%20Dashboard.png)
 
-## Marks Management
-![Marks Management](screenshots/marks.png)
+## Student Dashboard
+
+![Student Dashboard](./backend/Screenshot/Student%20Dashboard.png)
+
+## Student Timetable
+
+![Student Timetable](./backend/Screenshot/TimeTable%20in%20studentDashboard.png)

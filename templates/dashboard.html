@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{%
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div><h4>{{ total_students }}</h4><p>Total Students</p></div>
+                    <div class="align-self-center"><i class="fas fa-users fa-2x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div><h4>{{ avg_percentage }}%</h4><p>Average Percentage</p></div>
+                    <div class="align-self-center"><i class="fas fa-chart-line fa-2x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-warning stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div><h4>{{ SUBJECTS }}</h4><p>Subjects</p></div>
+                    <div class="align-self-center"><i class="fas fa-book fa-2x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if top_student %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-trophy"></i> Top Student</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>{{ top_student.name }}</h6>
+                        <p class="mb-1"><strong>Roll No:</strong> {{ top_student.roll_no }}</p>
+                        <p class="mb-1"><strong>Percentage:</strong> {{ "%.2f"|format(top_student.percentage) }}%</p>
+                        <p class="mb-1"><strong>Grade:</strong> {{ top_student.grade }}</p>
+                        <p class="mb-0"><strong>CGPA:</strong> {{ "%.2f"|format(top_student.cgpa) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><h5 class="card-title mb-0">Quick Actions</h5></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3"><a href="{{ url_for('add_student') }}" class="btn btn-primary w-100"><i class="fas fa-user-plus"></i> Add Student</a></div>
+                    <div class="col-md-3 mb-3"><a href="{{ url_for('view_students') }}" class="btn btn-success w-100"><i class="fas fa-users"></i> View Students</a></div>
+                    <div class="col-md-3 mb-3"><a href="{{ url_for('search_student') }}" class="btn btn-info w-100"><i class="fas fa-search"></i> Search</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-tasks"></i> My To-Do List</h5>
+            </div>
+            <div class="card-body">
+                <form id="todoForm" onsubmit="addTodoItem(event)">
+                    <div class="input-group mb-3">
+                        <input type="text" id="todoInput" class="form-control" placeholder="Add a new task" required>
+                        <button class="btn btn-primary" type="submit">Add</button>
+                    </div>
+                </form>
+                <ul id="todoList" class="list-group">
+                    <!-- To-Do items will be dynamically added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const todoList = document.getElementById('todoList');
+    const todoInput = document.getElementById('todoInput');
+
+    function addTodoItem(event) {
+        event.preventDefault();
+        const task = todoInput.value.trim();
+        if (task) {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            listItem.innerHTML = `
+                ${task}
+                <button class="btn btn-sm btn-danger" onclick="removeTodoItem(this)">Remove</button>
+            `;
+            todoList.appendChild(listItem);
+            todoInput.value = '';
+        }
+    }
+
+    function removeTodoItem(button) {
+        const listItem = button.parentElement;
+        todoList.removeChild(listItem);
+    }
+</script>
+{% endblock %}

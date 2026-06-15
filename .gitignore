@@ -1,0 +1,19 @@
+# Virtual Environment
+venv/
+venu/
+.venv/
+.venv314/
+.runenv/
+.tmp/
+env/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# IDE
+.vscode/
+.idea/

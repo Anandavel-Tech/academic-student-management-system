@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Student Marks{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Student Marks</h2>
+
+    <!-- Add Marks Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Add / Update Marks
+        </div>
+        <div class="card-body">
+            <form id="marksForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label" for="rollNo">Roll Number</label>
+                        <input type="text" id="rollNo" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="courseCode">Course Code</label>
+                        <input type="text" id="courseCode" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca1">CA 1 (0-50)</label>
+                        <input type="number" id="ca1" class="form-control" min="0" max="50" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca2">CA 2 (0-50)</label>
+                        <input type="number" id="ca2" class="form-control" min="0" max="50" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca3">CA 3 (0-20)</label>
+                        <input type="number" id="ca3" class="form-control" min="0" max="20" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Save Marks</button>
+                <span id="marksMessage" class="ms-3"></span>
+            </form>
+        </div>
+    </div>
+
+    <!-- Marks summary table -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>Course</th>
+                            <th>Course Code</th>
+                            <th>CA 1</th>
+                            <th>CA 2</th>
+                            <th>CA 3</th>
+                            <th>Total</th>
+                            <th>Average</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if marks %}
+                            {% for mark in marks %}
+                            <tr>
+                                <td>{{ mark.student_name }}</td>
+                                <td>{{ mark.roll_no }}</td>
+                                <td>{{ mark.course_name }}</td>
+                                <td>{{ mark.course_code }}</td>
+                                <td>{{ mark.subjects.ca1 }}</td>
+                                <td>{{ mark.subjects.ca2 }}</td>
+                                <td>{{ mark.subjects.ca3 }}</td>
+                                <td>{{ mark.marks }}</td>
+                                <td>{{ "%.2f"|format(mark.average) }}</td>
+                                <td><span class="badge bg-primary">{{ mark.grade }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="12" class="text-center">No marks data available</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

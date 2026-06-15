@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Marks Visualization{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Marks Visualization</h2>
+        <button class="btn btn-sm btn-outline-primary" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> Print as PDF
+        </button>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-header">Top Students (by Average)</div>
+                <div class="card-body">
+                    {% if top_students %}
+                    <ol class="mb-0">
+                        {% for s in top_students %}
+                        <li>
+                            <strong>{{ s.student_name }}</strong>
+                            (Roll No: {{ s.roll_no }})
+                            &mdash; Avg: {{ "%.2f"|format(s.average) }}
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% else %}
+                    <p class="text-muted mb-0">No data available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-header">Grade Distribution</div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('chart') }}" alt="Grade distribution chart" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Make printed PDF cleaner */
+@media print {
+    nav, .sidebar, .navbar, .btn, .navbar-nav { display: none !important; }
+    body { background: #ffffff; }
+    .container { width: 100%; max-width: 100%; }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Academic Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    
+        .quotes-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .quotes-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .quotes-section h2 i {
+            color: #3498db;
+        }
+        
+        .add-quote-form {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .add-quote-form h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .quote-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: all 0.3s;
+        }
+        
+        .quote-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .quotes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .quote-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-left: 4px solid #3498db;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 4rem;
+            color: rgba(52, 152, 219, 0.1);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        
+        .quote-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            font-size: 0.9rem;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: #7f8c8d;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .quote-date {
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+        
+        .empty-quotes {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 2rem;
+            grid-column: 1 / -1;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .empty-quotes i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #bdc3c7;
+        }
+        
+        /* Smaller theme toggle */
+        .theme-toggle {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background: #e9ecef;
+        }
+        
+        .theme-toggle-icon {
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .quotes-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .quotes-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('students') }}">Students</a>
+            <a href="{{ url_for('courses') }}">Courses</a>
+            <a href="{{ url_for('time_table') }}">Time Table</a>
+            <a href="{{ url_for('attendance_percentage') }}">Attendance</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-toggle-icon">🌙</span>
+            <span>Theme</span>
+        </button>
+    </nav>
+    <div class="container">
+        <div class="list-container">
+            <h1>Welcome {{ session.username }}!</h1>
+            <div class="content">
+                <h2>Your Dashboard</h2>
+                <p>This is your main dashboard. Use the navigation menu above to access different sections.</p>
+                <div class="dashboard-grid" style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ url_for('students') }}" class="dashboard-card">
+                        <h3>📚 Students</h3>
+                        <p>View and manage students</p>
+                    </a>
+                    <a href="{{ url_for('courses') }}" class="dashboard-card">
+                        <h3>📖 Courses</h3>
+                        <p>View and manage courses</p>
+                    </a>
+                    <a href="{{ url_for('time_table') }}" class="dashboard-card">
+                        <h3>📅 Time Table</h3>
+                        <p>View class schedule</p>
+                    </a>
+                    <a href="{{ url_for('attendance_percentage') }}" class="dashboard-card">
+                        <h3>📊 Attendance</h3>
+                        <p>Check attendance percentage</p>
+                    </a>
+                </div>
+                
+                <!-- Quotes Section -->
+                <div class="quotes-section">
+                    <h2><i class="fas fa-quote-left"></i> Student Quotes</h2>
+                    
+                    <div class="add-quote-form">
+                        <h3><i class="fas fa-pencil-alt"></i> Share Your Inspiration</h3>
+                        <textarea class="quote-input" placeholder="Share an inspiring quote, thought, or academic tip..."></textarea>
+                        <button class="btn" id="add-quote-btn">
+                            <i class="fas fa-plus"></i> Add Quote
+                        </button>
+                    </div>
+                    
+                    <div class="quotes-list" id="quotes-container">
+                        <div class="empty-quotes">
+                            <i class="fas fa-comments"></i>
+                            <p>No quotes yet. Be the first to share inspiration with your peers!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addQuoteBtn = document.getElementById('add-quote-btn');
+            const quoteInput = document.querySelector('.quote-input');
+            const quotesContainer = document.getElementById('quotes-container');
+            
+            loadQuotes();
+            
+            addQuoteBtn.addEventListener('click', function() {
+                const quoteText = quoteInput.value.trim();
+                
+                if (quoteText) {
+                    addQuote(quoteText);
+                    quoteInput.value = '';
+                } else {
+                    alert('Please enter a quote before submitting.');
+                }
+            });
+            
+            quoteInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    addQuoteBtn.click();
+                }
+            });
+            
+            function addQuote(text) {
+                const newQuote = {
+                    id: Date.now(),
+                    text: text,
+                    date: new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })
+                };
+                
+                let quotes = JSON.parse(localStorage.getItem('academicQuotes')) || [];
+                quotes.push(newQuote);
+                localStorage.setItem('academicQuotes', JSON.stringify(quotes));
+                loadQuotes();
+            }
+            
+            function loadQuotes() {
+                const quotes = JSON.parse(localStorage.getItem('academicQuotes')) || [];
+                quotesContainer.innerHTML = '';
+                
+                if (quotes.length === 0) {
+                    quotesContainer.innerHTML = `
+                        <div class="empty-quotes">
+                            <i class="fas fa-comments"></i>
+                            <p>No quotes yet. Be the first to share inspiration with your peers!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                quotes.reverse().forEach(quote => {
+                    const quoteCard = document.createElement('div');
+                    quoteCard.className = 'quote-card';
+                    quoteCard.innerHTML = `
+                        <div class="quote-text">${quote.text}</div>
+                        <div class="quote-author">
+                            <span class="quote-date">${quote.date}</span>
+                            - Student
+                        </div>
+                    `;
+                    quotesContainer.appendChild(quoteCard);
+                });
+            }
+            
+            // Theme toggle function
+            function toggleTheme() {
+                document.body.classList.toggle('dark-theme');
+                // You would typically save the theme preference to localStorage here
+            }
+        });
+    </script>
+</body>
+</html>

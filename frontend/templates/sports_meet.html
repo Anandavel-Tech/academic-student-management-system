@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Annual Sports Meet{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Annual Sports Meet</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Join us for an exciting day of sports, teamwork, and fun!</p>
+                    <ul class="list-unstyled mb-4">
+                        <li><strong>Date:</strong> January 25th</li>
+                        <li><strong>Registration closes:</strong> December 25th</li>
+                        <li><strong>Venue:</strong> Main Sports Ground</li>
+                        <li><strong>Reporting Time:</strong> 8:00 AM</li>
+                    </ul>
+                    <h5>Events</h5>
+                    <p>Track and field, football, basketball, relay, tug of war and many more events will be conducted across different categories.</p>
+                    <h5>Who can participate?</h5>
+                    <p>All registered students are welcome to participate. You can register for a maximum of <strong>three</strong> events.</p>
+                    <h5>How to register?</h5>
+                    <p>Contact your class coordinator or visit the department office to fill out the registration form before the deadline.</p>
+                    <p class="mt-3 mb-0 text-muted">For any queries, please reach out to the Sports Committee at <a href="mailto:sports@sriher.edu.in">sports@sriher.edu.in</a>.</p>
+                </div>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

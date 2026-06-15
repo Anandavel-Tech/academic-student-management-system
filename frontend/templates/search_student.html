@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Search Students{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Search Students</h2>
+    <form method="post" class="card card-body mb-4">
+        <label for="search" class="form-label">Name, roll number, or email</label>
+        <div class="input-group">
+            <input id="search" name="search" class="form-control" value="{{ search_term or '' }}" required>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    {% if students is not none %}
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                    <tr><th>Roll No</th><th>Name</th><th>Email</th><th>Department</th></tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.roll_no }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.department }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center text-muted">No matching students found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}AI & Data Analytics Guest Lecture{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-users me-2"></i>AI &amp; Data Analytics Guest Lecture</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Join us for an insightful session on AI &amp; Data Analytics by <strong>Dr. Sathya</strong>.</p>
+                    <ul class="list-unstyled mb-4">
+                        <li><strong>Date:</strong> December 21st</li>
+                        <li><strong>Time:</strong> 2:00 PM</li>
+                        <li><strong>Venue:</strong> Seminar Hall</li>
+                    </ul>
+                    <h5>Session Highlights</h5>
+                    <ul>
+                        <li>Introduction to current trends in Artificial Intelligence and Data Analytics.</li>
+                        <li>Real-world case studies from industry and research.</li>
+                        <li>How to build a career in AI &amp; Data Science.</li>
+                        <li>Q&amp;A session with Dr. Sathya.</li>
+                    </ul>
+                    <h5>Who should attend?</h5>
+                    <p>All students interested in AI, Machine Learning, Data Science, or related fields are encouraged to attend.</p>
+                    <h5>Registration</h5>
+                    <p>No separate registration is required. Please be seated in the Seminar Hall by <strong>1:45 PM</strong> to ensure a prompt start.</p>
+                    <p class="mt-3 mb-0 text-muted">For queries, contact the Department Office or mail <a href="mailto:events@sriher.edu.in">events@sriher.edu.in</a>.</p>
+                </div>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

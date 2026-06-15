@@ -1,0 +1,175 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Student Marks{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Student Marks</h2>
+
+    {% if session.role == 'admin' %}
+    <!-- Add Marks Form (admin only) -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Add / Update Marks
+        </div>
+        <div class="card-body">
+            <form id="marksForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label" for="rollNo">Roll Number</label>
+                        <select id="rollNo" class="form-select" required>
+                            <option value="" disabled selected>Select Roll Number</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="courseCode">Course Code</label>
+                        <select id="courseCode" class="form-select" required>
+                            <option value="" disabled selected>Select Course Code</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca1">CA 1 (0-50)</label>
+                        <input type="number" id="ca1" class="form-control" min="0" max="50" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca2">CA 2 (0-50)</label>
+                        <input type="number" id="ca2" class="form-control" min="0" max="50" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="ca3">CA 3 (0-20)</label>
+                        <input type="number" id="ca3" class="form-control" min="0" max="20" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Save Marks</button>
+                <span id="marksMessage" class="ms-3"></span>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Marks summary table -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>Course</th>
+                            <th>Course Code</th>
+                            <th>CA 1</th>
+                            <th>CA 2</th>
+                            <th>CA 3</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if marks %}
+                            {% for mark in marks %}
+                            <tr>
+                                <td>{{ mark.student_name }}</td>
+                                <td>{{ mark.roll_no }}</td>
+                                <td>{{ mark.course_name }}</td>
+                                <td>{{ mark.course_code }}</td>
+                                <td>{{ mark.subjects.ca1 }}</td>
+                                <td>{{ mark.subjects.ca2 }}</td>
+                                <td>{{ mark.subjects.ca3 }}</td>
+                                <td>{{ mark.marks }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="12" class="text-center">No marks data available</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Submit marks via JSON to the /add-marks endpoint
+const marksForm = document.getElementById('marksForm');
+const msgEl = document.getElementById('marksMessage');
+
+// Populate dropdowns for roll numbers and course codes
+async function populateDropdowns() {
+    try {
+        const [studentsRes, coursesRes] = await Promise.all([
+            fetch('/api/students-min'),
+            fetch('/api/courses-min')
+        ]);
+
+        const studentsData = await studentsRes.json().catch(() => null);
+        const coursesData = await coursesRes.json().catch(() => null);
+
+        const rollNoSelect = document.getElementById('rollNo');
+        const courseCodeSelect = document.getElementById('courseCode');
+
+        if (studentsData && studentsData.success && Array.isArray(studentsData.data)) {
+            studentsData.data.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.roll_no;
+                opt.textContent = `${s.roll_no} - ${s.name}`;
+                rollNoSelect.appendChild(opt);
+            });
+        }
+
+        if (coursesData && coursesData.success && Array.isArray(coursesData.data)) {
+            coursesData.data.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.course_code;
+                opt.textContent = `${c.course_code} - ${c.course_name}`;
+                courseCodeSelect.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error('Error loading dropdown data', err);
+    }
+}
+
+populateDropdowns();
+
+marksForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const payload = {
+        roll_no: document.getElementById('rollNo').value.trim(),
+        course_code: document.getElementById('courseCode').value.trim(),
+        ca1: document.getElementById('ca1').value,
+        ca2: document.getElementById('ca2').value,
+        ca3: document.getElementById('ca3').value
+    };
+
+    try {
+        const res = await fetch('/add-marks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok || !data || !data.success) {
+            msgEl.textContent = data && data.message ? data.message : 'Error saving marks';
+            msgEl.className = 'text-danger';
+            return;
+        }
+
+        msgEl.textContent = data.message || 'Marks saved successfully';
+        msgEl.className = 'text-success';
+        // reload to show new marks in table
+        setTimeout(() => window.location.reload(), 800);
+    } catch (err) {
+        console.error(err);
+        msgEl.textContent = 'Error connecting to server';
+        msgEl.className = 'text-danger';
+    }
+});
+</script>
+{% endblock %}

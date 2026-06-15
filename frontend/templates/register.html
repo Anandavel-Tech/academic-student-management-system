@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Academic Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .theme-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .theme-toggle-container .theme-toggle {
+            margin-left: 0;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .theme-toggle-container .theme-toggle:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-toggle-icon">🌙</span>
+            <span>Toggle Theme</span>
+        </button>
+    </div>
+    <div class="container">
+        <div class="login-form">
+            <h1>Register</h1>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-error">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('register') }}">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p class="mt-4 text-center">
+                Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+            </p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

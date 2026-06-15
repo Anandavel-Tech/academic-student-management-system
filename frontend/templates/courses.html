@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Courses - Academic Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Home</a>
+            <a href="{{ url_for('students') }}">Students</a>
+            <a href="{{ url_for('add_student') }}">Add Student</a>
+            <a href="{{ url_for('courses') }}">Courses</a>
+            <a href="{{ url_for('add_course') }}">Add Course</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-toggle-icon">🌙</span>
+            <span>Toggle Theme</span>
+        </button>
+    </nav>
+    <div class="container">
+        <div class="header-actions">
+            <h1>Courses List</h1>
+            <div>
+                <button id="editModeBtn" class="btn-edit-mode" onclick="toggleEditMode()">
+                    Enable Edit Mode
+                </button>
+                <a href="{{ url_for('add_course') }}" class="btn-primary">Add Course</a>
+            </div>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="list-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Credits</th>
+                        <th>Department</th>
+                        <th class="action-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.course_code }}</td>
+                        <td>{{ course.course_name }}</td>
+                        <td>{{ course.credits }}</td>
+                        <td>{{ course.department }}</td>
+                        <td class="action-buttons">
+                            <button onclick="deleteCourse('{{ course.course_code }}')" 
+                                    class="btn-action btn-delete" 
+                                    disabled>
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

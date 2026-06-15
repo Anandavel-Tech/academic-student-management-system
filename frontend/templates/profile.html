@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ username }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">My Profile</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-3">Avatar</h5>
+                    {% if avatar_url %}
+                        <img src="{{ avatar_url }}" alt="Avatar" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary mb-3" style="width: 120px; height: 120px; color: #fff; font-size: 2.5rem;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+
+                    {% if role == 'student' %}
+                    <form method="post" enctype="multipart/form-data" class="mt-2">
+                        <div class="mb-2">
+                            <input type="file" name="avatar" accept="image/*" class="form-control form-control-sm" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Upload Avatar</button>
+                    </form>
+                    {% else %}
+                        <p class="text-muted small mb-0">Avatar upload is only available for student accounts.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Basic Information</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Username</dt>
+                        <dd class="col-sm-8">{{ username }}</dd>
+
+                        <dt class="col-sm-4">Role</dt>
+                        <dd class="col-sm-8">{{ role|capitalize }}</dd>
+
+                        {% if student %}
+                            <dt class="col-sm-4">Name</dt>
+                            <dd class="col-sm-8">{{ student.name }}</dd>
+
+                            <dt class="col-sm-4">Roll No</dt>
+                            <dd class="col-sm-8">{{ student.roll_no }}</dd>
+
+                            <dt class="col-sm-4">Email</dt>
+                            <dd class="col-sm-8">{{ student.email or '-' }}</dd>
+
+                            <dt class="col-sm-4">Department</dt>
+                            <dd class="col-sm-8">{{ student.department or '-' }}</dd>
+                        {% endif %}
+                    </dl>
+
+                    <hr>
+                    <p class="mb-0">
+                        To change your password, use the <a href="{{ url_for('change_password') }}">Change password</a> page.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

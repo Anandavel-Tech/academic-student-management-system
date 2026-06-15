@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Reports - Academic Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Admin Reports</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Export Data</h5>
+            <p class="small text-muted">Download CSV reports for further analysis in Excel.</p>
+
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Students (optionally filter by department)</label>
+                    <div class="input-group">
+                        <select id="deptSelect" class="form-select">
+                            <option value="">All Departments</option>
+                            {% for student in students %}
+                                {% if student.department %}
+                                    <option value="{{ student.department }}">{{ student.department }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-primary" type="button" onclick="exportStudentsCsv()">Download CSV</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Marks by Course</label>
+                    <div class="input-group">
+                        <select id="courseSelect" class="form-select">
+                            <option value="">All Courses</option>
+                            {% for c in courses %}
+                                <option value="{{ c.course_code }}">{{ c.course_code }} - {{ c.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-secondary" type="button" onclick="exportMarksCsv()">Download CSV</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Student Reports</h5>
+            <p class="small text-muted">Open a printable report card for any student.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in students %}
+                        <tr>
+                            <td>{{ s.roll_no }}</td>
+                            <td>{{ s.name }}</td>
+                            <td>{{ s.department or '-' }}</td>
+                            <td>{{ s.email or '-' }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_student_report', roll_no=s.roll_no) }}" class="btn btn-outline-primary btn-sm">
+                                    View Report
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function exportStudentsCsv() {
+        const dept = document.getElementById('deptSelect').value;
+        const url = dept ? `/admin/export/students.csv?department=${encodeURIComponent(dept)}`
+                         : '/admin/export/students.csv';
+        window.location.href = url;
+    }
+
+    function exportMarksCsv() {
+        const course = document.getElementById('courseSelect').value;
+        const url = course ? `/admin/export/marks.csv?course_code=${encodeURIComponent(course)}`
+                           : '/admin/export/marks.csv';
+        window.location.href = url;
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Add Student{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add New Student</h1>
+</div>
+<div class="row"><div class="col-md-8"><div class="card"><div class="card-body">
+    <form method="POST">
+        <div class="row mb-3">
+            <div class="col-md-6"><label class="form-label">Student Name</label><input type="text" class="form-control" name="name" required></div>
+            <div class="col-md-6"><label class="form-label">Roll Number</label><input type="text" class="form-control" name="roll_no" required></div>
+        </div>
+        <h5 class="mt-4 mb-3">Marks (0-100)</h5>
+        <div class="row">{% for i in subjects %}
+            <div class="col-md-4 mb-3"><label class="form-label">Subject {{ i }}</label><input type="number" class="form-control" name="subject_{{ i }}" min="0" max="100" required></div>
+        {% endfor %}</div>
+        <div class="mt-4"><button type="submit" class="btn btn-primary">Add Student</button><a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a></div>
+    </form>
+</div></div></div></div>
+{% endblock %}

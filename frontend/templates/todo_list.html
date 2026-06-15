@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .task-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .task-form select,
+    .task-form input,
+    .task-form button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+      width: 100%;
+      max-width: 220px;
+    }
+    .task-form input:focus,
+    .task-form select:focus {
+      border-color: #3498db;
+    }
+    .task-form button {
+      background-color: #3498db;
+      color: #fff;
+      cursor: pointer;
+      max-width: 120px;
+    }
+    .task-form button:hover {
+      background-color: #2980b9;
+    }
+    .subject-group {
+      margin-top: 30px;
+    }
+    .subject-group h2 {
+      color: #34495e;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 5px;
+    }
+    .task-item {
+      padding: 15px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .task-details {
+      flex: 1;
+    }
+    .task-item button {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .task-item button:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📘 Student To-Do List</h1>
+
+    <!-- Add Task Form -->
+    <form id="taskForm" class="task-form">
+      <select id="subject" required>
+        <option value="">Select Subject</option>
+        <option value="Maths 3">Maths 3</option>
+        <option value="DAA">DAA</option>
+        <option value="COA">COA</option>
+        <option value="Web Tech">Web Tech</option>
+        
+
+      </select>
+      <input type="text" id="taskName" placeholder="Enter Task Name" required>
+      <input type="date" id="deadline" required>
+      <button type="submit">Add</button>
+    </form>
+
+    <!-- Task List Display -->
+    <div id="subjectGroups"></div>
+  </div>
+
+  <script>
+    const taskForm = document.getElementById('taskForm');
+    const subjectGroupsContainer = document.getElementById('subjectGroups');
+
+    // Load tasks from localStorage
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+      subjectGroupsContainer.innerHTML = '';
+      const subjects = ["Maths 3", "DAA", "COA", "Web Tech"];
+
+      subjects.forEach(subject => {
+        const subjectDiv = document.createElement('div');
+        subjectDiv.className = 'subject-group';
+        subjectDiv.innerHTML = `<h2>${subject}</h2><div class="task-list" id="${subject.replace(/\s/g, '_')}"></div>`;
+        subjectGroupsContainer.appendChild(subjectDiv);
+
+        if (tasks[subject]) {
+          tasks[subject].forEach(task => addTaskToDOM(subject, task, false));
+        }
+      });
+    }
+
+    // Save tasks to localStorage
+    function saveTasks() {
+      const allTasks = {};
+      document.querySelectorAll('.subject-group').forEach(group => {
+        const subject = group.querySelector('h2').textContent;
+        const taskElements = group.querySelectorAll('.task-item');
+        const subjectTasks = [];
+        taskElements.forEach(item => {
+          const name = item.querySelector('.task-details strong').textContent;
+          const deadline = item.querySelector('.task-details small').textContent.replace('Deadline: ', '');
+          subjectTasks.push({ name, deadline });
+        });
+        allTasks[subject] = subjectTasks;
+      });
+      localStorage.setItem('tasks', JSON.stringify(allTasks));
+    }
+
+    // Add a task to the DOM
+    function addTaskToDOM(subject, task, save = true) {
+      const taskList = document.getElementById(subject.replace(/\s/g, '_'));
+      const taskItem = document.createElement('div');
+      taskItem.className = 'task-item';
+
+      const taskDetails = document.createElement('div');
+      taskDetails.className = 'task-details';
+      taskDetails.innerHTML = `
+        <strong>${task.name}</strong><br>
+        <small>Deadline: ${task.deadline}</small>
+      `;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = function () {
+        taskItem.remove();
+        saveTasks();
+      };
+
+      taskItem.appendChild(taskDetails);
+      taskItem.appendChild(deleteBtn);
+      taskList.appendChild(taskItem);
+
+      if (save) saveTasks();
+    }
+
+    // Handle form submission
+    taskForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const subject = document.getElementById('subject').value;
+      const name = document.getElementById('taskName').value;
+      const deadline = document.getElementById('deadline').value;
+
+      if (!subject || !name || !deadline) return;
+
+      const task = { name, deadline };
+      addTaskToDOM(subject, task);
+      taskForm.reset();
+    });
+
+    // Load tasks on page load
+    document.addEventListener('DOMContentLoaded', loadTasks);
+  </script>
+</body>
+</html>

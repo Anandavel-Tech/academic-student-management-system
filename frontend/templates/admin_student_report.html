@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Student Report - {{ student.roll_no }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 report-container">
+    <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+        <h2 class="mb-0">Student Report</h2>
+        <button class="btn btn-primary" onclick="window.print()">
+            <i class="fas fa-print"></i> Print / Save as PDF
+        </button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Basic Information</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Name:</strong> {{ student.name }}</p>
+                    <p class="mb-1"><strong>Roll No:</strong> {{ student.roll_no }}</p>
+                    <p class="mb-1"><strong>Department:</strong> {{ student.department or '-' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Email:</strong> {{ student.email or '-' }}</p>
+                    <p class="mb-1"><strong>CGPA:</strong> {{ '%.2f'|format(cgpa) }}</p>
+                    <p class="mb-1"><strong>Overall Grade:</strong> {{ overall_grade }}</p>
+                    <p class="mb-1"><strong>Attendance %:</strong>
+                        {% if attendance_percent is not none %}
+                            {{ attendance_percent }}%
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Marks & Eligibility</h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>CA1 (50)</th>
+                            <th>CA2 (50)</th>
+                            <th>CA3 (20)</th>
+                            <th>Internal CA1</th>
+                            <th>Internal CA2</th>
+                            <th>Internal CA3</th>
+                            <th>Total Internal (50)</th>
+                            <th>Eligibility</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in marks %}
+                        <tr>
+                            <td>{{ m.course_code }}</td>
+                            <td>{{ m.course_name }}</td>
+                            <td>{{ m.ca1_raw }}</td>
+                            <td>{{ m.ca2_raw }}</td>
+                            <td>{{ m.ca3_raw }}</td>
+                            <td>{{ m.ca1_internal }}</td>
+                            <td>{{ m.ca2_internal }}</td>
+                            <td>{{ m.ca3_internal }}</td>
+                            <td>{{ m.total_internal }}</td>
+                            <td>
+                                {% if m.eligibility == 'eligible' %}
+                                    <span class="badge bg-success">Eligible</span>
+                                {% elif m.eligibility == 'ineligible' %}
+                                    <span class="badge bg-danger">Ineligible</span>
+                                {% else %}
+                                    {{ m.eligibility or '-' }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+    body {
+        background-color: #ffffff !important;
+    }
+    .navbar, .sidebar, .no-print {
+        display: none !important;
+    }
+    main.col-md-9,
+    .report-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb;
+    }
+    .table {
+        font-size: 11px;
+        width: 100% !important;
+    }
+    .table-responsive {
+        overflow: visible !important;
+    }
+    th, td {
+        white-space: nowrap;
+        padding: 4px 6px !important;
+    }
+}
+</style>
+
+{% endblock %}

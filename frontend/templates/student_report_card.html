@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Student Report Card{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+            <h2>Student Report Card</h2>
+            <p class="text-muted mb-4">Your course marks and performance summary are available on the performance page.</p>
+            <a class="btn btn-primary" href="{{ url_for('my_performance') }}">View My Performance</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

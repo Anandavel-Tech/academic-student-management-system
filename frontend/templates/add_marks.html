@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Add Marks{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Add or Update Marks</h2>
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="roll_no" class="form-label">Student</label>
+                        <select id="roll_no" name="roll_no" class="form-select" required>
+                            <option value="">Select a student</option>
+                            {% for student in students %}
+                            <option value="{{ student.roll_no }}">{{ student.roll_no }} - {{ student.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="course_code" class="form-label">Course</label>
+                        <select id="course_code" name="course_code" class="form-select" required>
+                            <option value="">Select a course</option>
+                            {% for course in courses %}
+                            <option value="{{ course.course_code }}">{{ course.course_code }} - {{ course.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ca1" class="form-label">CA 1 (0-50)</label>
+                        <input id="ca1" name="ca1" type="number" min="0" max="50" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ca2" class="form-label">CA 2 (0-50)</label>
+                        <input id="ca2" name="ca2" type="number" min="0" max="50" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ca3" class="form-label">CA 3 (0-20)</label>
+                        <input id="ca3" name="ca3" type="number" min="0" max="20" class="form-control" required>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-4" type="submit">Save Marks</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

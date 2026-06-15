@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Course - Academic Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Home</a>
+            <a href="{{ url_for('students') }}">Students</a>
+            <a href="{{ url_for('add_student') }}">Add Student</a>
+            <a href="{{ url_for('courses') }}">Courses</a>
+            <a href="{{ url_for('add_course') }}">Add Course</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-toggle-icon">🌙</span>
+            <span>Toggle Theme</span>
+        </button>
+    </nav>
+    <div class="container">
+        <h1>Add New Course</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('add_course') }}">
+            <input type="text" name="course_code" placeholder="Course Code" required>
+            <input type="text" name="course_name" placeholder="Course Name" required>
+            <input type="number" name="credits" placeholder="Credits" required>
+            <input type="text" name="department" placeholder="Department" required>
+            <button type="submit">Add Course</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

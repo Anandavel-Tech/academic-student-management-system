@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}My Performance - Academic Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">My Performance</h2>
+
+    {% if subjects %}
+    <div class="row g-3">
+        {% for subj in subjects %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ subj.course_name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ subj.course_code }}</h6>
+
+                    <div class="mt-3 small">
+                        <p class="mb-1"><strong>CA1:</strong> {{ subj.ca1_raw }}/50 	<span class="text-muted">(internal: {{ subj.ca1_internal }})</span></p>
+                        <p class="mb-1"><strong>CA2:</strong> {{ subj.ca2_raw }}/50 	<span class="text-muted">(internal: {{ subj.ca2_internal }})</span></p>
+                        <p class="mb-1"><strong>CA3:</strong> {{ subj.ca3_raw }}/20 	<span class="text-muted">(internal: {{ subj.ca3_internal }})</span></p>
+                        <p class="mb-1"><strong>Total Internal:</strong> {{ subj.total_internal }}/50</p>
+                        <p class="mb-2">
+                            <strong>Eligibility:</strong>
+                            {% if subj.eligibility == 'eligible' %}
+                                <span class="badge bg-success">Eligible</span>
+                            {% else %}
+                                <span class="badge bg-danger">Ineligible</span>
+                            {% endif %}
+                        </p>
+                        {% if subj.eligibility == 'ineligible' and subj.needed_ca3_internal > 0 %}
+                            <p class="text-warning mb-0">
+                                You need approximately <strong>{{ subj.needed_ca3_internal }}</strong> more internal marks from CA3
+                                to reach eligibility (25/50).
+                            </p>
+                        {% elif subj.eligibility == 'eligible' %}
+                            <p class="text-success mb-0">You are currently eligible for this subject.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr class="my-4" />
+
+    <h4 class="mb-3">CA Trend by Subject</h4>
+    <div class="card">
+        <div class="card-body">
+            <canvas id="caTrendChart" height="120"></canvas>
+        </div>
+    </div>
+
+    {% else %}
+        <div class="alert alert-info mt-3">
+            No marks data available yet. Once your marks are entered, your performance summary will appear here.
+        </div>
+    {% endif %}
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    (function() {
+        const labels = {{ chart_labels|tojson|safe }};
+        const ca1Data = {{ chart_ca1|tojson|safe }};
+        const ca2Data = {{ chart_ca2|tojson|safe }};
+        const ca3Data = {{ chart_ca3|tojson|safe }};
+
+        if (!labels.length) return;
+
+        const ctx = document.getElementById('caTrendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'CA1 (out of 50)',
+                        data: ca1Data,
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.3,
+                        fill: false,
+                    },
+                    {
+                        label: 'CA2 (out of 50)',
+                        data: ca2Data,
+                        borderColor: 'rgba(22, 163, 74, 1)',
+                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        tension: 0.3,
+                        fill: false,
+                    },
+                    {
+                        label: 'CA3 (out of 20)',
+                        data: ca3Data,
+                        borderColor: 'rgba(234, 88, 12, 1)',
+                        backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                        tension: 0.3,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Marks'
+                        }
+                    }
+                }
+            }
+        });
+    })();
+</script>
+
+{% endblock %}

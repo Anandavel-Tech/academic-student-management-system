@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Academic Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .theme-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .theme-toggle-container .theme-toggle {
+            margin-left: 0;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .theme-toggle-container .theme-toggle:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-toggle-icon">🌙</span>
+            <span>Toggle Theme</span>
+        </button>
+    </div>
+    <div class="login-form">
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-error">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+            
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+        <!-- Registration disabled: accounts are created by admin -->
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
